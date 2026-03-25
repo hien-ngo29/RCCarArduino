@@ -12,6 +12,3 @@ Car struture:
 
 Decide how car look, my code just care about these 3 parts.
 > Visit [Pins.h](./Pins.h) for references about pins and modify if you need.
-
-## A little note
-The code is still in an incomplete status and some dead code features. It's just usable for basic movement from the controller. There will be updates soon.

@@ -2,20 +2,19 @@
 #define INCLUDE_GAMEPAD_MODULE
 
 #include <Arduino.h>
+#include <Dabble.h>
 #include <Servo.h>
 #include "CarCore.h"
 #include "Pins.h"
-#include <Dabble.h>
+#include "InputReader.h"
 
 using namespace RCCar;
 
-// InputReader inputReader;
+InputReader carInputReader;
 CarCore carCore;
 
 Servo wheelServo;
-SoftwareSerial bluetooth(bluetoothPin1, bluetoothPin2);
-
-unsigned long lastPacket = 0;
+SoftwareSerial bluetooth(bluetoothPinTX, bluetoothPinRX);
 
 void setup() {
   Serial.begin(9600);
@@ -45,19 +44,37 @@ void loop() {
 }
 
 void checkControl() {
-  if (GamePad.isUpPressed())
+  checkStraightControl();
+  checkWheelRotationControl();
+  checkSpeedControl();
+}
+
+void checkStraightControl()
+{
+  if (carInputReader.isForwardPressed())
     carCore.MoveForward();
-  else if (GamePad.isDownPressed())
+  else if (carInputReader.isBackwardPressed())
     carCore.MoveBackward();
   else
     carCore.ReturnToIdleState();
+}
 
-  if (GamePad.isCirclePressed())
+void checkWheelRotationControl()
+{
+  if (carInputReader.isRightPressed())
     carCore.TurnRight();
-  else if (GamePad.isSquarePressed())
+  else if (carInputReader.isLeftPressed())
     carCore.TurnLeft();
   else
     carCore.SetWheelAngleDefault();
+}
+
+void checkSpeedControl()
+{
+  if (carInputReader.isIncreaseSpeedPressed())
+    carCore.IncreaseSpeed();
+  else if (carInputReader.isDecreaseSpeedPressed())
+    carCore.DecreaseSpeed();
 }
 
 void runFromCarData() {

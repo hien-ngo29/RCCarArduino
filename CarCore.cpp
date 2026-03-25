@@ -10,45 +10,32 @@ void RCCar::CarCore::ReturnToIdleState() {
 }
 
 void RCCar::CarCore::SetWheelAngleDefault() {
-  currentWheelAngle = 90;
+  currentWheelAngle = carDefaultData.idleTurnAngle;
 }
 
 void RCCar::CarCore::MoveForward() {
-  // switch (carCore) {
-  //   case CarMode::MANUAL:
-  //     MoveForwardManualMode();
-  //     break;
-  //   case CarMode::AUTO:
-  //     MoveForwardAutoMode();
-  //     break;
-  // }
-  currentSpeed = carLimitData.maxSpeed;
+  currentSpeed = carDefaultData.maxSpeed;
 }
 
 void RCCar::CarCore::TurnLeft() {
-  currentWheelAngle = 90 - carLimitData.maxTurnAngle;
+  currentWheelAngle = carDefaultData.idleTurnAngle - carDefaultData.maxTurnAngle;
 }
 
 void RCCar::CarCore::TurnRight() {
-  currentWheelAngle = 90 + carLimitData.maxTurnAngle;
+  currentWheelAngle = carDefaultData.idleTurnAngle + carDefaultData.maxTurnAngle;
 }
 
 void RCCar::CarCore::MoveBackward() {
-  currentSpeed = -carLimitData.maxSpeed / 3;
-}
-
-void RCCar::CarCore::MoveForwardAutoMode() {
-  IncreaseSpeed();
-  MoveForwardManualMode();
-}
-
-void RCCar::CarCore::MoveForwardManualMode() {
-  currentSpeed = carLimitData.maxSpeed;
+  currentSpeed = -carDefaultData.maxSpeed;
 }
 
 void RCCar::CarCore::IncreaseSpeed(int interval = 2) {
-  carLimitData.maxSpeed += interval;
-  carLimitData.maxSpeed = constrain(interval, 1, 255);
+  carDefaultData.maxSpeed += interval;
+  carDefaultData.maxSpeed = constrain(interval, 1, 255);
+}
+
+void RCCar::CarCore::DecreaseSpeed(int interval = 2) {
+  IncreaseSpeed(-interval);
 }
 
 bool RCCar::CarCore::isInStopState() {

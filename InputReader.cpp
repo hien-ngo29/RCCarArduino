@@ -1,26 +1,22 @@
-#include <Dabble.h>
 #include "InputReader.h"
 
-bool RCCar::InputReader::isForwardPressed() {
-  return GamePad.isUpPressed();
+RCCar::InputReader::InputReader() : bluetoothModule(nullptr) {
+  
 }
 
-bool RCCar::InputReader::isBackwardPressed() {
-  return GamePad.isDownPressed();
+RCCar::InputReader::InputReader(SoftwareSerial &bluetooth) {
+  SetBluetoothModule(bluetooth);
 }
 
-bool RCCar::InputReader::isRightPressed() {
-  return GamePad.isCirclePressed();
+void RCCar::InputReader::SetBluetoothModule(SoftwareSerial &bluetooth) {
+  bluetoothModule = &bluetooth;
 }
 
-bool RCCar::InputReader::isLeftPressed() {
-  return GamePad.isSquarePressed();
-}
-
-bool RCCar::InputReader::isIncreaseSpeedPressed() {
-  return GamePad.isTrianglePressed();
-}
-
-bool RCCar::InputReader::isDecreaseSpeedPressed() {
-  return GamePad.isCrossPressed();
-}
+void RCCar::InputReader::init() {}
+void RCCar::InputReader::process() {}
+bool RCCar::InputReader::isForwardPressed() {}
+bool RCCar::InputReader::isBackwardPressed() {}
+bool RCCar::InputReader::isRightPressed() {}
+bool RCCar::InputReader::isLeftPressed() {}
+bool RCCar::InputReader::isIncreaseSpeedPressed() {}
+bool RCCar::InputReader::isDecreaseSpeedPressed() {}

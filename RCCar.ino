@@ -1,12 +1,8 @@
-#define CUSTOM_SETTINGS
-#define INCLUDE_GAMEPAD_MODULE
-
 #include <Arduino.h>
-#include <Dabble.h>
 #include <Servo.h>
 #include "CarCore.h"
 #include "Pins.h"
-#include "InputReader.h"
+#include "InputReaderBase.h"
 
 using namespace RCCar;
 
@@ -16,10 +12,11 @@ CarCore carCore;
 Servo wheelServo;
 SoftwareSerial bluetooth(bluetoothPinTX, bluetoothPinRX);
 
+InputReaderBase inputReaderBase;
+
 void setup() {
   Serial.begin(9600);
   bluetooth.begin(9600);
-  Dabble.begin(bluetooth);
 
   pinMode(engineForwardPin, OUTPUT);
   pinMode(engineBackwardPin, OUTPUT);
@@ -31,15 +28,12 @@ void setup() {
 }
 
 void loop() {
-  Dabble.processInput();
+  inputReaderBase.process();
 
-  if (Dabble.isAppConnected())  
-    checkControl();
-  else {
-    carCore.ReturnToIdleState();
-    carCore.SetWheelAngleDefault();
-  }
+  carCore.ReturnToIdleState();
+  carCore.SetWheelAngleDefault();
     
+  checkControl();
   runFromCarData();
 }
 
@@ -51,9 +45,9 @@ void checkControl() {
 
 void checkStraightControl()
 {
-  if (carInputReader.isForwardPressed())
+  if (inputReaderBase.isForwardPressed())
     carCore.MoveForward();
-  else if (carInputReader.isBackwardPressed())
+  else if (inputReaderBase.isBackwardPressed())
     carCore.MoveBackward();
   else
     carCore.ReturnToIdleState();
@@ -61,9 +55,9 @@ void checkStraightControl()
 
 void checkWheelRotationControl()
 {
-  if (carInputReader.isRightPressed())
+  if (inputReaderBase.isRightPressed())
     carCore.TurnRight();
-  else if (carInputReader.isLeftPressed())
+  else if (inputReaderBase.isLeftPressed())
     carCore.TurnLeft();
   else
     carCore.SetWheelAngleDefault();
@@ -71,9 +65,9 @@ void checkWheelRotationControl()
 
 void checkSpeedControl()
 {
-  if (carInputReader.isIncreaseSpeedPressed())
+  if (inputReaderBase.isIncreaseSpeedPressed())
     carCore.IncreaseSpeed();
-  else if (carInputReader.isDecreaseSpeedPressed())
+  else if (inputReaderBase.isDecreaseSpeedPressed())
     carCore.DecreaseSpeed();
 }
 
